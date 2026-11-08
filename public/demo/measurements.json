@@ -1,0 +1,74 @@
+[
+  {
+    "id": "demo-1",
+    "type": "pulse",
+    "value": 72,
+    "minutesAgo": 25,
+    "note": "Утреннее измерение"
+  },
+  {
+    "id": "demo-2",
+    "type": "pressure",
+    "systolic": 120,
+    "diastolic": 80,
+    "minutesAgo": 55,
+    "note": "После отдыха"
+  },
+  {
+    "id": "demo-3",
+    "type": "temperature",
+    "value": 36.6,
+    "minutesAgo": 80,
+    "note": ""
+  },
+  {
+    "id": "demo-4",
+    "type": "sugar",
+    "value": 5.1,
+    "minutesAgo": 105,
+    "note": "До завтрака"
+  },
+  {
+    "id": "demo-5",
+    "type": "weight",
+    "value": 68.4,
+    "minutesAgo": 130,
+    "note": "Утром"
+  },
+  {
+    "id": "demo-6",
+    "type": "pulse",
+    "value": 76,
+    "minutesAgo": 1450,
+    "note": "Вечерняя запись"
+  },
+  {
+    "id": "demo-7",
+    "type": "pressure",
+    "systolic": 118,
+    "diastolic": 78,
+    "minutesAgo": 1480,
+    "note": ""
+  },
+  {
+    "id": "demo-8",
+    "type": "temperature",
+    "value": 36.5,
+    "minutesAgo": 1510,
+    "note": ""
+  },
+  {
+    "id": "demo-9",
+    "type": "weight",
+    "value": 68.6,
+    "minutesAgo": 1600,
+    "note": "Утром"
+  },
+  {
+    "id": "demo-10",
+    "type": "sugar",
+    "value": 5.3,
+    "minutesAgo": 1650,
+    "note": "До завтрака"
+  }
+]

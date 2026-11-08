@@ -27,7 +27,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   useEffect(() => {
     const title =
       navigation.find((item) => item.path === pathname)?.label ??
-      "Страница не найдена";
+      (pathname.endsWith("/edit") ? "Редактировать измерение" : "Страница не найдена");
     document.title = `${title} — Рядом`;
     window.scrollTo(0, 0);
     if (previousPath.current !== pathname) {
@@ -81,7 +81,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           </Typography>
         </div>
         <div className="sidebar-footer">
-          Домашний мониторинг<span>Учебный проект · № 1</span>
+          Домашний мониторинг<span>Учебный проект · № 3</span>
         </div>
       </aside>
       <div className="workspace">

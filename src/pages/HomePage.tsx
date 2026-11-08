@@ -3,12 +3,13 @@ import AddRounded from "@mui/icons-material/AddRounded";
 import ArrowForwardRounded from "@mui/icons-material/ArrowForwardRounded";
 import AccessTimeRounded from "@mui/icons-material/AccessTimeRounded";
 import { Link } from "react-router-dom";
-import type { Measurement } from "../types/measurement";
-import { measurementTypes } from "../types/measurement";
-import { measurementInfo } from "../data/measurements";
-import { formatDate, formatValue, sortMeasurements } from "../utils/format";
-import MeasurementIcon from "../components/MeasurementIcon";
-import MeasurementList from "../components/MeasurementList";
+import type { Measurement } from "../entities/measurement/model/types";
+import { measurementTypes } from "../entities/measurement/model/types";
+import { measurementInfo } from "../entities/measurement/model/info";
+import { formatValue, sortMeasurements } from "../entities/measurement/lib/format";
+import { formatDate } from "../shared/lib/date";
+import MeasurementIcon from "../entities/measurement/ui/MeasurementIcon";
+import MeasurementList from "../entities/measurement/ui/MeasurementList";
 
 export default function HomePage({
   measurements,

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import {
   Button,
   Paper,
@@ -12,17 +13,20 @@ import {
 import AddRounded from "@mui/icons-material/AddRounded";
 import HistoryRounded from "@mui/icons-material/HistoryRounded";
 import { Link } from "react-router-dom";
-import type { Measurement } from "../types/measurement";
-import { measurementInfo } from "../data/measurements";
-import { formatDate, formatValue } from "../utils/format";
+import type { Measurement } from "../model/types";
+import { measurementInfo } from "../model/info";
+import { formatValue } from "../lib/format";
+import { formatDate } from "../../../shared/lib/date";
 import MeasurementIcon from "./MeasurementIcon";
 
 export default function MeasurementList({
   measurements,
   filtered = false,
+  renderActions,
 }: {
   measurements: Measurement[];
   filtered?: boolean;
+  renderActions?: (measurement: Measurement) => ReactNode;
 }) {
   if (measurements.length === 0) {
     return (
@@ -31,11 +35,11 @@ export default function MeasurementList({
           <HistoryRounded />
         </span>
         <Typography variant="h3">
-          {filtered ? "Измерений этого типа пока нет" : "Пока нет измерений"}
+          {filtered ? "По вашему запросу ничего не найдено" : "Пока нет измерений"}
         </Typography>
         <Typography color="text.secondary" variant="body2">
           {filtered
-            ? "Выберите другой показатель или добавьте новую запись."
+            ? "Измените фильтр или текст поиска."
             : "Добавьте первую запись — она появится здесь и на главной."}
         </Typography>
         <Button
@@ -60,11 +64,12 @@ export default function MeasurementList({
               <TableCell>Значение</TableCell>
               <TableCell>Дата и время</TableCell>
               <TableCell>Заметка</TableCell>
+              {renderActions && <TableCell>Действия</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
             {measurements.map((measurement) => (
-              <TableRow key={measurement.id} hover>
+              <TableRow key={measurement.id} hover className="record-appear">
                 <TableCell>
                   <span className="table-type">
                     <MeasurementIcon type={measurement.type} small />
@@ -85,6 +90,7 @@ export default function MeasurementList({
                 <TableCell className="note-cell">
                   {measurement.note || "—"}
                 </TableCell>
+                {renderActions && <TableCell>{renderActions(measurement)}</TableCell>}
               </TableRow>
             ))}
           </TableBody>
@@ -92,7 +98,7 @@ export default function MeasurementList({
       </TableContainer>
       <div className="mobile-measurements">
         {measurements.map((measurement) => (
-          <Paper key={measurement.id} className="mobile-record">
+          <Paper key={measurement.id} className="mobile-record record-appear">
             <div className="mobile-record-heading">
               <span className="table-type">
                 <MeasurementIcon type={measurement.type} small />
@@ -116,6 +122,7 @@ export default function MeasurementList({
                 {measurement.note}
               </Typography>
             )}
+            {renderActions && renderActions(measurement)}
           </Paper>
         ))}
       </div>

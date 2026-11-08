@@ -1,31 +1,29 @@
 import { useState } from "react";
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  Typography,
-} from "@mui/material";
+import { Button, Paper, Typography } from "@mui/material";
 import AddRounded from "@mui/icons-material/AddRounded";
-import SouthRounded from "@mui/icons-material/SouthRounded";
 import { Link } from "react-router-dom";
-import { isMeasurementType, measurementTypes } from "../types/measurement";
-import type { Measurement, MeasurementType } from "../types/measurement";
-import { measurementInfo } from "../data/measurements";
-import { sortMeasurements } from "../utils/format";
-import MeasurementList from "../components/MeasurementList";
+import type { Measurement, MeasurementType } from "../entities/measurement/model/types";
+import { sortMeasurements } from "../entities/measurement/lib/format";
+import MeasurementList from "../entities/measurement/ui/MeasurementList";
+import MeasurementFilters from "../features/filter-measurements/MeasurementFilters";
+import DeleteMeasurementDialog from "../features/delete-measurement/DeleteMeasurementDialog";
 
-export default function HistoryPage({
-  measurements,
-}: {
+interface Props {
   measurements: Measurement[];
-}) {
-  const [filter, setFilter] = useState<MeasurementType | "all">("all");
-  const filteredMeasurements = sortMeasurements(measurements).filter(
-    (measurement) => filter === "all" || measurement.type === filter,
+  onDelete: (id: string) => void;
+}
+
+export default function HistoryPage({ measurements, onDelete }: Props) {
+  const [type, setType] = useState<MeasurementType | "all">("all");
+  const [query, setQuery] = useState("");
+  const [order, setOrder] = useState<"newest" | "oldest">("newest");
+  const [toDelete, setToDelete] = useState<Measurement | null>(null);
+  const search = query.trim().toLocaleLowerCase("ru-RU");
+  const visible = sortMeasurements(measurements).filter((measurement) =>
+    (type === "all" || measurement.type === type) &&
+    measurement.note.toLocaleLowerCase("ru-RU").includes(search),
   );
+  if (order === "oldest") visible.reverse();
 
   return (
     <>
@@ -33,61 +31,30 @@ export default function HistoryPage({
         <div>
           <div className="eyebrow">ЛИЧНЫЙ ЖУРНАЛ</div>
           <Typography variant="h1">История измерений</Typography>
-          <Typography color="text.secondary" sx={{ mt: 1 }}>
-            Все ваши записи в хронологическом порядке.
-          </Typography>
+          <Typography color="text.secondary" sx={{ mt: 1 }}>Найдите, исправьте или удалите нужную запись.</Typography>
         </div>
-        <Button
-          component={Link}
-          to="/measurements/new"
-          startIcon={<AddRounded />}
-          variant="contained"
-        >
-          Добавить измерение
-        </Button>
+        <Button component={Link} to="/measurements/new" startIcon={<AddRounded />} variant="contained">Добавить измерение</Button>
       </div>
       <Paper className="records-panel history-panel">
-        <div className="history-toolbar">
-          <FormControl size="small" className="filter-control">
-            <InputLabel id="filter-label">Тип показателя</InputLabel>
-            <Select
-              labelId="filter-label"
-              label="Тип показателя"
-              value={filter}
-              onChange={(event) => {
-                const value = event.target.value;
-                if (value === "all" || isMeasurementType(value))
-                  setFilter(value);
-              }}
-            >
-              <MenuItem value="all">Все показатели</MenuItem>
-              {measurementTypes.map((type) => (
-                <MenuItem key={type} value={type}>
-                  {measurementInfo[type].label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <div className="history-meta">
-            <span>Записей: {filteredMeasurements.length}</span>
-            <span className="sort-label">
-              <SouthRounded sx={{ fontSize: 15 }} />
-              Сначала новые
-            </span>
-          </div>
-        </div>
-        <MeasurementList
-          measurements={filteredMeasurements}
-          filtered={filter !== "all"}
-        />
+        <MeasurementFilters type={type} query={query} order={order}
+          onTypeChange={setType} onQueryChange={setQuery} onOrderChange={setOrder}
+          onReset={() => { setType("all"); setQuery(""); setOrder("newest"); }} />
+        <Typography className="results-count" variant="body2" color="text.secondary" role="status">
+          Показано: {visible.length} из {measurements.length}
+        </Typography>
+        <MeasurementList measurements={visible} filtered={type !== "all" || Boolean(search)}
+          renderActions={(measurement) => (
+            <div className="record-actions">
+              <Button size="small" component={Link} to={`/measurements/${measurement.id}/edit`}>Изменить</Button>
+              <Button size="small" color="error" onClick={() => setToDelete(measurement)}>Удалить</Button>
+            </div>
+          )} />
       </Paper>
-      <Typography
-        className="journal-caption"
-        variant="body2"
-        color="text.secondary"
-      >
-        Время отображается в часовом поясе вашего устройства.
+      <Typography className="journal-caption" variant="body2" color="text.secondary">
+        Изменения хранятся до обновления страницы. Время — в часовом поясе вашего устройства.
       </Typography>
+      <DeleteMeasurementDialog measurement={toDelete} onCancel={() => setToDelete(null)}
+        onConfirm={(id) => { onDelete(id); setToDelete(null); }} />
     </>
   );
 }

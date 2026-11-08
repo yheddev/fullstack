@@ -1,16 +1,3 @@
-import type { Measurement } from "../types/measurement";
-
-const numberFormat = new Intl.NumberFormat("ru-RU", {
-  maximumFractionDigits: 10,
-});
-
-export function formatValue(measurement: Measurement): string {
-  if (measurement.type === "pressure") {
-    return `${numberFormat.format(measurement.systolic)}/${numberFormat.format(measurement.diastolic)}`;
-  }
-  return numberFormat.format(measurement.value);
-}
-
 export function formatDate(value: string): string {
   return new Intl.DateTimeFormat("ru-RU", {
     day: "numeric",
@@ -19,12 +6,6 @@ export function formatDate(value: string): string {
     minute: "2-digit",
     year: "numeric",
   }).format(new Date(value));
-}
-
-export function sortMeasurements(measurements: Measurement[]): Measurement[] {
-  return [...measurements].sort(
-    (a, b) => Date.parse(b.measuredAt) - Date.parse(a.measuredAt),
-  );
 }
 
 export function toLocalDateTime(date: Date): string {

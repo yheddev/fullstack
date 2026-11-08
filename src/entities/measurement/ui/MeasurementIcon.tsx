@@ -3,8 +3,8 @@ import MonitorHeartOutlined from "@mui/icons-material/MonitorHeartOutlined";
 import ThermostatRounded from "@mui/icons-material/ThermostatRounded";
 import WaterDropOutlined from "@mui/icons-material/WaterDropOutlined";
 import MonitorWeightOutlined from "@mui/icons-material/MonitorWeightOutlined";
-import type { MeasurementType } from "../types/measurement";
-import { measurementInfo } from "../data/measurements";
+import type { MeasurementType } from "../model/types";
+import { measurementInfo } from "../model/info";
 
 export default function MeasurementIcon({
   type,
