@@ -1,0 +1,11 @@
+node_modules
+dist/
+work/
+*.tsbuildinfo
+.DS_Store
+*.local
+
+.openai/
+.env
+.env.*
+!.env.example
